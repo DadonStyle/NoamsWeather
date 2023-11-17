@@ -1,21 +1,29 @@
-import Header from "./modules/header/Header";
 import { useContext } from "react";
-import { DarkModeContext } from "./context/context";
-import SearchComponent from "./shared/Search/SearchComponent";
-import WeatherDisplay from "./modules/WeatherDisplay/WeatherDisplay";
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import AppRouters from "./routes";
+import Header from "./modules/Header/Header.tsx";
+import { DarkModeContext } from "./context/DarkModeContext.tsx";
+import useGlobalMuiTheme from "./styles/useGlobalStyleMui.tsx";
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const { isDarkMode } = useContext(DarkModeContext);
-
+  const theme = useGlobalMuiTheme();
   return (
-    <div
-      className={`main-container ${isDarkMode ? "dark-mode" : "light-mode"}`}
-    >
-      <Header />
-      <SearchComponent />
-      <WeatherDisplay />
-    </div>
+    <ThemeProvider theme={theme}>
+      <ToastContainer />
+      <BrowserRouter>
+        <div
+          className={`app-container ${isDarkMode ? "dark-mode" : "light-mode"}`}
+        >
+          <Header />
+          <AppRouters />
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

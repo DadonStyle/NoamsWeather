@@ -1,19 +1,24 @@
 import { useContext } from "react";
 import { Button, IconButton } from "@mui/material";
 import { LightModeOutlined, DarkModeOutlined } from "@mui/icons-material";
-import { DarkModeContext } from "../../context/context";
+import { DarkModeContext } from "../../context/DarkModeContext";
+import { useNavigate } from "react-router-dom";
 import "./Header.css";
 
 const Header = () => {
   const { toggleDarkMode, isDarkMode } = useContext(DarkModeContext);
-
+  const navigate = useNavigate();
+  const handleOnFavoriteClick = () => navigate("./favorites");
+  const handleOnHomeClick = () => navigate("./");
   return (
-    <div className="header-wrapper">
-      <div className="header-logo">Noams Weather</div>
+    <div className={`header-wrapper ${isDarkMode ? "dark-header" : ""}`}>
+      <div onClick={handleOnHomeClick} className="header-logo">
+        Noams Weather
+      </div>
       <div className="buttons-wrapper">
         <div>
-          <Button>Home</Button>
-          <Button>Favorites</Button>
+          <Button onClick={handleOnHomeClick}>Home</Button>
+          <Button onClick={handleOnFavoriteClick}>Favorites</Button>
         </div>
         <div>
           <IconButton

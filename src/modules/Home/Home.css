@@ -1,0 +1,9 @@
+.home-wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: transparent;
+  gap: 2rem;
+  height: 100%;
+  width: 100%;
+}

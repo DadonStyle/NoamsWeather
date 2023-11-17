@@ -2,11 +2,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   position: fixed;
   top: 0;
+  background-color: rgb(161, 148, 220);
   min-height: 4rem;
-  background-color: #c01048;
+  width: 100%;
+}
+
+.header-logo {
+  padding-left: 1rem;
+  font-weight: 600;
+  font-family: fantasy;
+  cursor: pointer;
+}
+
+.buttons-wrapper {
+  padding-right: 0.5rem;
+}
+
+.dark-header {
+  background: #c01048;
 }
 
 .buttons-wrapper {
