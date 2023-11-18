@@ -5,12 +5,13 @@ import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import WeatherBox from "./components/WeatherBox/WeatherBox";
 import { DarkModeContext } from "../../context/DarkModeContext";
 import { CurrentCityContext } from "../../context/CurrentCityContext";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import mockForcast from "./5Days.json";
 import "./WeatherDisplay.css";
 import { getDayFromDate } from "../../util/helpers";
 
 interface TemperatureValueObject {
-  Unit: string;
+  Unit: "C" | "F";
   Value: number;
 }
 
@@ -25,6 +26,7 @@ interface weatherDataDTO {
 
 interface forcastDataDTO {
   Date: string;
+  EpochDate: number;
   Temperature: {
     Minimum: TemperatureValueObject;
     Maximum: TemperatureValueObject;
@@ -39,11 +41,11 @@ const mock = {
       WeatherText: "sunny AF",
       Temperature: {
         Metric: {
-          Unit: "c",
+          Unit: "C",
           Value: 24,
         },
         Imperial: {
-          Unit: "f",
+          Unit: "F",
           Value: 320,
         },
       },
@@ -73,11 +75,11 @@ const WeatherDisplay = () => {
     const fetchForcast = async () => {
       try {
         // const res = await axios(
-        //   `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${currCityObj?.Key}?apikey=3OAefwYMLqqLIZpfl93js4T95jycSqib&metric=${isCelsius}`
+        //   `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${currCityObj?.Key}?apikey=Ka9SGgkjvd8HKugfGQXYEBdzphTizpID&metric=${isCelsius}`
         // );
         const res = mockForcast;
-        if (res?.DailyForecasts) setForcastArr(res?.DailyForecasts);
-        console.log(res?.DailyForecasts);
+        if (res.data.DailyForecasts) setForcastArr(res.data.DailyForecasts);
+        console.log(res.data.DailyForecasts);
       } catch (err) {
         console.log(err);
       }
@@ -88,10 +90,10 @@ const WeatherDisplay = () => {
     } else {
       setWeatherObj(null);
     }
-    // console.log("currCityObj", currCityObj);
   }, [currCityObj, isCelsius]);
 
-  const handleCelsiusChange = () => setIsCelsius((prev) => !prev);
+  const handleToggleC = () => setIsCelsius(true);
+  const handleToggleF = () => setIsCelsius(false);
 
   const showDegree = () => {
     if (weatherObj !== null) {
@@ -122,16 +124,11 @@ const WeatherDisplay = () => {
             }`}</span>
             {showDegree()}
             {weatherObj?.Temperature && (
-              <ToggleButtonGroup
-                value={"left"}
-                exclusive
-                onChange={handleCelsiusChange}
-                aria-label="text alignment"
-              >
-                <ToggleButton value="right" aria-label="centered">
+              <ToggleButtonGroup value={isCelsius ? "right" : "left"} exclusive>
+                <ToggleButton onClick={handleToggleF} value="left">
                   {weatherObj?.Temperature.Imperial.Unit}
                 </ToggleButton>
-                <ToggleButton value="left" aria-label="left aligned">
+                <ToggleButton onClick={handleToggleC} value="right">
                   {weatherObj?.Temperature.Metric.Unit}
                 </ToggleButton>
               </ToggleButtonGroup>
@@ -146,6 +143,7 @@ const WeatherDisplay = () => {
       <div className="weater-days-wrapper">
         {forcastArr.map((item) => (
           <WeatherBox
+            key={item.EpochDate}
             day={getDayFromDate(item.Date)}
             minTemp={item.Temperature.Minimum.Value}
             maxTemp={item.Temperature.Maximum.Value}

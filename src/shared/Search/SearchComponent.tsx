@@ -7,8 +7,9 @@ import {
   CityContextObj,
   CurrentCityContext,
 } from "../../context/CurrentCityContext";
-import "./SearchComponent.css";
 import { DarkModeContext } from "../../context/DarkModeContext";
+import useCurrentLocation from "../../hooks/useCurrentLocation";
+import "./SearchComponent.css";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mock = {
@@ -47,10 +48,12 @@ const mock = {
 };
 
 const SearchComponent = () => {
-  const [searchString, setSearchString] = useState<string>("Tel Aviv");
+  const [searchString, setSearchString] = useState<string>("");
   const [options, setOptions] = useState<CityContextObj[]>([]);
   const { setCityObj } = useContext(CurrentCityContext);
   const { isDarkMode } = useContext(DarkModeContext);
+
+  // useCurrentLocation(setSearchString); // when mock on comment this to save calls
 
   const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.value === "") {
@@ -59,7 +62,6 @@ const SearchComponent = () => {
     }
     setSearchString(e.currentTarget.value);
   };
-
   const handleOnSelectInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cityObj = options.find(
       (item) => item.LocalizedName === e.target.value

@@ -43,6 +43,26 @@ const useGlobalMuiTheme = () => {
           },
         },
       },
+      MuiToggleButtonGroup: {
+        styleOverrides: {
+          root: {
+            color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
+          },
+        },
+      },
+      MuiToggleButton: {
+        styleOverrides: {
+          root: {
+            outline: "none !important",
+            color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
+            backgroundColor: isDarkMode ? "#4e031a" : "",
+            "&.Mui-selected": {
+              color: isDarkMode ? "rgb(243, 232, 232, 0.5)" : "#121212",
+              backgroundColor: isDarkMode ? "rgba(151, 151, 151, 0.1)" : "",
+            },
+          },
+        },
+      },
       MuiSvgIcon: {
         styleOverrides: {
           root: {

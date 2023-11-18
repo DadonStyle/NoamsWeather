@@ -2,7 +2,7 @@ interface WeatherBoxProps {
   day: string;
   minTemp: number;
   maxTemp: number;
-  unit: string;
+  unit: "C" | "F";
 }
 
 const WeatherBox = ({ day, minTemp, maxTemp, unit }: WeatherBoxProps) => {
