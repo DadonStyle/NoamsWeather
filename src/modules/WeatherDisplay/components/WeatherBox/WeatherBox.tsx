@@ -1,7 +1,19 @@
-import React from "react";
+interface WeatherBoxProps {
+  day: string;
+  minTemp: number;
+  maxTemp: number;
+  unit: string;
+}
 
-const WeatherBox = () => {
-  return <div>WeatherBox</div>;
+const WeatherBox = ({ day, minTemp, maxTemp, unit }: WeatherBoxProps) => {
+  return (
+    <div>
+      {day}
+      {minTemp}
+      {maxTemp}
+      {unit}
+    </div>
+  );
 };
 
 export default WeatherBox;

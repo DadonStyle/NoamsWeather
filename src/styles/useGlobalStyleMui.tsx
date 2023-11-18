@@ -23,6 +23,33 @@ const useGlobalMuiTheme = () => {
           },
         },
       },
+      MuiAutocomplete: {
+        styleOverrides: {
+          root: {
+            textTransform: "none",
+            color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
+            "&:hover": {
+              backgroundColor: isDarkMode ? "#4e031a" : "rgb(243, 232, 232)",
+            },
+            label: {
+              color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
+            },
+            input: {
+              color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
+            },
+            "&:disabled": {
+              backgroundColor: "#FECDD6",
+            },
+          },
+        },
+      },
+      MuiSvgIcon: {
+        styleOverrides: {
+          root: {
+            color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
+          },
+        },
+      },
       MuiButton: {
         styleOverrides: {
           root: {

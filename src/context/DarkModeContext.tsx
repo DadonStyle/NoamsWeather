@@ -19,7 +19,6 @@ export const DarkModeProvider = ({ children }: DarkModeProviderProps) => {
 
   const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const value: DarkModeContextType = { isDarkMode, toggleDarkMode };
 
   return (

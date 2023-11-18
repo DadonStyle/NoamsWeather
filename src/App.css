@@ -23,3 +23,15 @@
   background: rgb(255, 255, 255);
   color: #121212;
 }
+
+.box-shadow-light {
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
+}
+
+.box-shadow-dark {
+  box-shadow: 0px 0px 4px 0px rgba(255, 255, 255, 0.75);
+  -webkit-box-shadow: 0px 0px 4px 0px rgba(255, 255, 255, 0.75);
+  -moz-box-shadow: 0px 0px 4px 0px rgba(255, 255, 255, 0.75);
+}

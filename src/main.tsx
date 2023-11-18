@@ -4,11 +4,14 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { DarkModeProvider } from "./context/DarkModeContext.tsx";
 import "./index.css";
+import { CurrentCityProvider } from "./context/CurrentCityContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <DarkModeProvider>
-      <App />
+      <CurrentCityProvider>
+        <App />
+      </CurrentCityProvider>
     </DarkModeProvider>
   </React.StrictMode>
 );

@@ -1,1 +1,11 @@
 add load animation to the website
+
+
+
+
+
+do not forget:
+hide api keys in ENV
+remove all mocks
+delete mock json files
+remove all the commented lines

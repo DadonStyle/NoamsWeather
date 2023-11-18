@@ -5,6 +5,7 @@
   flex-direction: column;
   width: 100%;
   min-height: 30rem;
+  border-radius: 8px;
 }
 
 .display-header-wrapper {
