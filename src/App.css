@@ -9,6 +9,7 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  overflow: auto;
   height: 100%;
 }
 
@@ -47,4 +48,5 @@
   min-height: 15rem;
   font-size: 30px;
   font-weight: 700;
+  padding: 2rem;
 }

@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { Box } from "@mui/material";
-import { calcAverage } from "../../../../util/helpers";
 import { DarkModeContext } from "../../../../context/DarkModeContext";
 import "./WeatherBox.css";
 

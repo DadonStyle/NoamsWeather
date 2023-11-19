@@ -8,8 +8,11 @@ import { Box, Button } from "@mui/material";
 import "./FavoritesBox.css";
 import { DarkModeContext } from "../../../context/DarkModeContext";
 import { useNavigate } from "react-router-dom";
+import {
+  CurrentCityContext,
+  CityContextObj,
+} from "../../../context/CurrentCityContext";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FavoritesBox = ({
   cityName,
   cityKey,
@@ -19,6 +22,7 @@ const FavoritesBox = ({
 }: FavoritesObj) => {
   const { favoritesArr, setFavoritesArr } = useContext(FavoritesContext);
   const { isDarkMode } = useContext(DarkModeContext);
+  const { setCityObj } = useContext(CurrentCityContext);
   const navigate = useNavigate();
 
   const handleRemoveFromFavorites = () => {
@@ -27,6 +31,11 @@ const FavoritesBox = ({
   };
 
   const handleOnBoxClick = () => {
+    setCityObj({
+      Key: cityKey,
+      LocalizedName: cityName,
+      Country: { LocalizedName: "israel" },
+    } as CityContextObj);
     navigate("/");
   };
 

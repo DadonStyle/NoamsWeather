@@ -7,6 +7,7 @@
   padding: 1rem 1rem;
   min-height: 30rem;
   border-radius: 8px;
+  gap: 3rem;
   .display-header-wrapper {
     display: flex;
     justify-content: space-between;
@@ -22,7 +23,7 @@
           display: flex;
           gap: 2rem;
           .weather-unit-span {
-            width: 100px;
+            width: 60px;
             white-space: nowrap;
           }
         }

@@ -15,12 +15,12 @@ export interface CityContextObj {
 }
 
 interface CurrentCityContextType {
-  currCityObj: CityContextObj | null;
+  cityObj: CityContextObj | null;
   setCityObj: Dispatch<SetStateAction<CityContextObj | null>>;
 }
 
 export const CurrentCityContext = createContext<CurrentCityContextType>({
-  currCityObj: null,
+  cityObj: null,
   setCityObj: () => {},
 });
 
@@ -29,10 +29,10 @@ interface CurrentCityProviderProps {
 }
 
 export const CurrentCityProvider = ({ children }: CurrentCityProviderProps) => {
-  const [currCityObj, setCityObj] = useState<CityContextObj | null>(null);
+  const [cityObj, setCityObj] = useState<CityContextObj | null>(null);
 
   const value: CurrentCityContextType = {
-    currCityObj,
+    cityObj,
     setCityObj,
   };
 

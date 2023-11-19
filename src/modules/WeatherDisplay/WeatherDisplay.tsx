@@ -1,9 +1,6 @@
-import { useContext, useEffect, useState } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import axios from "axios";
+import { useContext, useState } from "react";
 import {
   Box,
-  Button,
   IconButton,
   ToggleButton,
   ToggleButtonGroup,
@@ -14,100 +11,20 @@ import { DarkModeContext } from "../../context/DarkModeContext";
 import { CurrentCityContext } from "../../context/CurrentCityContext";
 import { FavoritesContext, FavoritesObj } from "../../context/FavoritesContext";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import mockForcast from "./5Days.json";
 import { getDayFromDate } from "../../util/helpers";
+import useFetchWeatherData from "./hooks/useWeatherData";
 import "./WeatherDisplay.css";
 
-interface TemperatureValueObject {
-  Unit: "C" | "F";
-  Value: number;
-}
-
-interface weatherDataDTO {
-  IsDayTime: boolean;
-  WeatherText: string;
-  Temperature: {
-    Metric: TemperatureValueObject;
-    Imperial: TemperatureValueObject;
-  };
-}
-
-interface forcastDataDTO {
-  Date: string;
-  EpochDate: number;
-  Temperature: {
-    Minimum: TemperatureValueObject;
-    Maximum: TemperatureValueObject;
-  };
-}
-
-// const mock = {
-//   data: [
-//     {
-//       IsDayTime: true,
-//       WeatherText: "sunny AF",
-//       Temperature: {
-//         Metric: {
-//           Unit: "C",
-//           Value: 24,
-//         },
-//         Imperial: {
-//           Unit: "F",
-//           Value: 320,
-//         },
-//       },
-//     },
-//   ],
-// };
-
 const WeatherDisplay = () => {
-  const [weatherObj, setWeatherObj] = useState<weatherDataDTO | null>(null);
-  const [forcastArr, setForcastArr] = useState<forcastDataDTO[]>([]);
   const [isCelsius, setIsCelsius] = useState<boolean>(true);
   const { isDarkMode } = useContext(DarkModeContext);
-  const { currCityObj } = useContext(CurrentCityContext);
+  const { cityObj } = useContext(CurrentCityContext);
   const { favoritesArr, setFavoritesArr } = useContext(FavoritesContext);
   const isCityFavorite = favoritesArr.find(
-    (item) => item.cityKey === currCityObj?.Key
+    (item) => item.cityKey === cityObj?.Key
   );
 
-  useEffect(() => {
-    const fetchDailyData = async () => {
-      try {
-        const res = await axios(
-          `http://dataservice.accuweather.com/currentconditions/v1/${
-            currCityObj?.Key
-          }?apikey=${import.meta.env.VITE_API_KEY}`
-        );
-        // const res = mock;
-        if (res?.data) setWeatherObj(res.data[0]);
-      } catch (err) {
-        // toast.error("Something went wrong");
-      }
-    };
-    const fetchForcast = async () => {
-      try {
-        const res = await axios(
-          `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${
-            currCityObj?.Key
-          }?apikey=${import.meta.env.VITE_API_KEY}&metric=${isCelsius}`
-        );
-        console.log(res.data.DailyForecasts);
-        // const res = mockForcast;
-        if (res.data.DailyForecasts) setForcastArr(res.data.DailyForecasts);
-        else setForcastArr([]);
-      } catch (err) {
-        // toast.error("Something went wrong");
-      }
-    };
-    if (currCityObj !== null) {
-      fetchDailyData();
-      fetchForcast();
-    } else {
-      setWeatherObj(null);
-    }
-  }, [currCityObj, isCelsius]);
+  const { weatherObj, forcastArr } = useFetchWeatherData(isCelsius);
 
   const handleToggleC = () => setIsCelsius(true);
   const handleToggleF = () => setIsCelsius(false);
@@ -132,13 +49,13 @@ const WeatherDisplay = () => {
   };
 
   const handleAddFavorites = () => {
-    if (!weatherObj || !currCityObj) {
+    if (!weatherObj || !cityObj) {
       toast.error("Please choose a city first");
       return;
     }
     const newItem = {
-      cityName: currCityObj.LocalizedName,
-      cityKey: currCityObj.Key,
+      cityName: cityObj.LocalizedName,
+      cityKey: cityObj.Key,
       temp: isCelsius
         ? weatherObj.Temperature.Metric.Value
         : weatherObj.Temperature.Imperial.Value,
@@ -155,7 +72,7 @@ const WeatherDisplay = () => {
     toast.success("Added successfully");
   };
 
-  if (!currCityObj?.LocalizedName)
+  if (!cityObj?.LocalizedName)
     return <Box className="empty-wrapper">Please choose a city to view</Box>;
 
   return (
@@ -165,7 +82,7 @@ const WeatherDisplay = () => {
       <div className="display-header-wrapper">
         <div className="header-city-info">
           <div className="header-text">
-            <span>{`${currCityObj?.Country?.LocalizedName}, ${currCityObj?.LocalizedName}`}</span>
+            <span>{`${cityObj?.Country?.LocalizedName}, ${cityObj?.LocalizedName}`}</span>
             <div className="header-temp-wrapper">
               {showDegree()}
               {weatherObj?.Temperature && (

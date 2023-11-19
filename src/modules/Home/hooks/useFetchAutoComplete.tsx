@@ -56,10 +56,10 @@ const useFetchAutoComplete = (
         );
         // const res = mock;
         if (res?.data) {
-          const cityObj = res.data.find(
-            (item: CityContextObj) => item.LocalizedName === searchString
-          );
-          setCityObj(cityObj || null);
+          // const cityObj = res.data.find(
+          //   (item: CityContextObj) => item.LocalizedName === searchString
+          // );
+          // setCityObj(cityObj || null);
           setOptions(res.data);
         }
       } catch (err) {
