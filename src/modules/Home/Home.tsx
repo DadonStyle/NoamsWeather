@@ -12,6 +12,7 @@ import {
 } from "../../context/CurrentCityContext";
 import useFetchAutoComplete from "./hooks/useFetchAutoComplete";
 import "./Home.css";
+import useCurrentLocation from "../../hooks/useCurrentLocation";
 
 const Home = () => {
   const [searchString, setSearchString] = useState<string>("");
@@ -19,7 +20,7 @@ const Home = () => {
   const [options, setOptions] = useState<CityContextObj[]>([]);
   const { setCityObj } = useContext(CurrentCityContext);
 
-  // useCurrentLocation(setSearchString);
+  useCurrentLocation(setSearchString);
   useFetchAutoComplete(deferredSearchString, setOptions);
 
   const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +28,6 @@ const Home = () => {
   };
   const handleOnSelectInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      // useMemo
       const cityObj = options.find(
         (item) => item.LocalizedName === e.target.value
       );

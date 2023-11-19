@@ -1,7 +1,6 @@
 add load animation to the website
 
-where i stopped: need to finish with the favorites, just finished the favorites context
-did not checked it yet, need to check and connect it
+check for optimizations and clear do not forget list
 
 
 

@@ -4,41 +4,7 @@ import {
   CurrentCityContext,
 } from "../../../context/CurrentCityContext";
 import axios from "axios";
-
-// const mock = {
-//   data: [
-//     {
-//       Version: 1,
-//       Key: "1234",
-//       Type: "City",
-//       Rank: 20,
-//       LocalizedName: "Ashdod",
-//       Country: {
-//         ID: "KZ",
-//         LocalizedName: "Israel",
-//       },
-//       AdministrativeArea: {
-//         ID: "AST",
-//         LocalizedName: "Astana",
-//       },
-//     },
-//     {
-//       Version: 1,
-//       Key: "1234",
-//       Type: "City",
-//       Rank: 20,
-//       LocalizedName: "Tel Aviv",
-//       Country: {
-//         ID: "KZ",
-//         LocalizedName: "Israel",
-//       },
-//       AdministrativeArea: {
-//         ID: "AST",
-//         LocalizedName: "Astana",
-//       },
-//     },
-//   ],
-// };
+import { toast } from "react-toastify";
 
 const useFetchAutoComplete = (
   searchString: string,
@@ -54,16 +20,15 @@ const useFetchAutoComplete = (
             import.meta.env.VITE_API_KEY
           }&q=${searchString}`
         );
-        // const res = mock;
         if (res?.data) {
-          // const cityObj = res.data.find(
-          //   (item: CityContextObj) => item.LocalizedName === searchString
-          // );
-          // setCityObj(cityObj || null);
+          const cityObj = res.data.find(
+            (item: CityContextObj) => item.LocalizedName === searchString
+          );
+          setCityObj(cityObj || null);
           setOptions(res.data);
         }
       } catch (err) {
-        // toast.error("Something went wrong");
+        toast.error("Something went wrong");
       }
     };
     if (searchString !== "") fetchData();

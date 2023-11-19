@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { CurrentCityContext } from "../../../context/CurrentCityContext";
 
 interface TemperatureValueObject {
@@ -42,10 +43,9 @@ const useFetchWeatherData = (isCelsius: boolean) => {
             cityObj?.Key
           }?apikey=${import.meta.env.VITE_API_KEY}`
         );
-        // const res = mock;
         if (res?.data) setWeatherObj(res.data[0]);
       } catch (err) {
-        // toast.error("Something went wrong");
+        toast.error("Something went wrong");
       }
     };
     const fetchForcast = async () => {
@@ -55,11 +55,10 @@ const useFetchWeatherData = (isCelsius: boolean) => {
             cityObj?.Key
           }?apikey=${import.meta.env.VITE_API_KEY}&metric=${isCelsius}`
         );
-        // const res = mockForcast;
         if (res.data.DailyForecasts) setForcastArr(res.data.DailyForecasts);
         else setForcastArr([]);
       } catch (err) {
-        // toast.error("Something went wrong");
+        toast.error("Something went wrong");
       }
     };
     if (cityObj !== null) {
