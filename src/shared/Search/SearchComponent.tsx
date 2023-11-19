@@ -1,95 +1,25 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import axios from "axios";
-import { useEffect, useState, useContext } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useContext } from "react";
 import { Autocomplete, TextField } from "@mui/material";
-import { toast } from "react-toastify";
-import {
-  CityContextObj,
-  CurrentCityContext,
-} from "../../context/CurrentCityContext";
+import { CityContextObj } from "../../context/CurrentCityContext";
 import { DarkModeContext } from "../../context/DarkModeContext";
-import useCurrentLocation from "../../hooks/useCurrentLocation";
 import "./SearchComponent.css";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mock = {
-  data: [
-    {
-      Version: 1,
-      Key: "1234",
-      Type: "City",
-      Rank: 20,
-      LocalizedName: "Ashdod",
-      Country: {
-        ID: "KZ",
-        LocalizedName: "Israel",
-      },
-      AdministrativeArea: {
-        ID: "AST",
-        LocalizedName: "Astana",
-      },
-    },
-    {
-      Version: 1,
-      Key: "1234",
-      Type: "City",
-      Rank: 20,
-      LocalizedName: "Tel Aviv",
-      Country: {
-        ID: "KZ",
-        LocalizedName: "Israel",
-      },
-      AdministrativeArea: {
-        ID: "AST",
-        LocalizedName: "Astana",
-      },
-    },
-  ],
-};
+// reusable component, this is why i use any instead of specific types
+interface SearchComponentProps {
+  onChangeFunc: (item: any) => void;
+  onSelectFunc: (item: any) => void;
+  options: any[];
+  searchString: string;
+}
 
-const SearchComponent = () => {
-  const [searchString, setSearchString] = useState<string>("");
-  const [options, setOptions] = useState<CityContextObj[]>([]);
-  const { setCityObj } = useContext(CurrentCityContext);
+const SearchComponent = ({
+  onChangeFunc,
+  onSelectFunc,
+  options,
+  searchString,
+}: SearchComponentProps) => {
   const { isDarkMode } = useContext(DarkModeContext);
-
-  // useCurrentLocation(setSearchString); // when mock on comment this to save calls
-
-  const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.value === "") {
-      setOptions([]);
-      return;
-    }
-    setSearchString(e.currentTarget.value);
-  };
-  const handleOnSelectInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const cityObj = options.find(
-      (item) => item.LocalizedName === e.target.value
-    );
-    setCityObj(cityObj || null);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // const res = await axios(
-        //   `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=Ka9SGgkjvd8HKugfGQXYEBdzphTizpID&q=${searchString}`
-        // );
-        const res = mock;
-        if (res?.data) {
-          const cityObj = res.data.find(
-            (item: CityContextObj) => item.LocalizedName === searchString
-          );
-          setCityObj(cityObj || null);
-          setOptions(res.data);
-        }
-        // console.log(res.data);
-      } catch (err) {
-        toast.error("API limit reached");
-      }
-    };
-    if (searchString !== "") fetchData();
-  }, [searchString, setCityObj]);
 
   return (
     <div className="search-wrapper">
@@ -100,11 +30,11 @@ const SearchComponent = () => {
         options={options.map((item: CityContextObj) => item.LocalizedName)}
         sx={{ width: 300 }}
         value={searchString}
-        onSelect={handleOnSelectInput}
+        onSelect={onSelectFunc}
         renderInput={(params) => (
           <TextField
             lang="en"
-            onChange={handleOnChangeInput as () => void}
+            onChange={onChangeFunc as () => void}
             {...params}
             label="City"
           />

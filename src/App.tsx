@@ -14,7 +14,7 @@ const App = () => {
   const theme = useGlobalMuiTheme();
   return (
     <ThemeProvider theme={theme}>
-      <ToastContainer />
+      <ToastContainer autoClose={1_500} />
       <BrowserRouter>
         <div
           className={`app-container ${isDarkMode ? "dark-mode" : "light-mode"}`}

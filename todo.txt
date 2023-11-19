@@ -8,6 +8,8 @@ did not checked it yet, need to check and connect it
 
 do not forget:
 hide api keys in ENV
+make shared components reusable!
 remove all mocks
+rempve all console logs
 delete mock json files
 remove all the commented lines

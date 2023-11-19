@@ -47,6 +47,7 @@ const useGlobalMuiTheme = () => {
         styleOverrides: {
           root: {
             color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
+            maxHeight: "24px",
           },
         },
       },
@@ -55,9 +56,11 @@ const useGlobalMuiTheme = () => {
           root: {
             outline: "none !important",
             color: isDarkMode ? "rgb(243, 232, 232)" : "#121212",
-            backgroundColor: isDarkMode ? "#4e031a" : "",
+            backgroundColor: isDarkMode ? "#4e031a" : "rgb(161, 148, 220)",
             "&.Mui-selected": {
-              color: isDarkMode ? "rgb(243, 232, 232, 0.5)" : "#121212",
+              color: isDarkMode
+                ? "rgb(243, 232, 232, 0.5)"
+                : "rgba(18,18,18, 0.5)",
               backgroundColor: isDarkMode ? "rgba(151, 151, 151, 0.1)" : "",
             },
           },

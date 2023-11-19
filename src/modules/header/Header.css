@@ -2,8 +2,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
-  top: 0;
   background-color: rgb(161, 148, 220);
   min-height: 4rem;
   width: 100%;

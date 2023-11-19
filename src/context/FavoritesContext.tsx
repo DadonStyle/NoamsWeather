@@ -6,21 +6,21 @@ import {
   useState,
 } from "react";
 
-export interface favoritesObj {
+export interface FavoritesObj {
   cityName: string;
-  cityKey: number;
+  cityKey: string;
   temp: number;
   unit: "C" | "F";
   weatherDesc: string;
 }
 
 interface FavoritesContextType {
-  favoritesArr: favoritesObj[];
-  setFavoritesArr: Dispatch<SetStateAction<favoritesObj[]>>;
+  favoritesArr: FavoritesObj[];
+  setFavoritesArr: Dispatch<SetStateAction<FavoritesObj[]>>;
 }
 
 export const FavoritesContext = createContext<FavoritesContextType>({
-  favoritesArr: [] as favoritesObj[],
+  favoritesArr: [] as FavoritesObj[],
   setFavoritesArr: () => {},
 });
 
@@ -29,7 +29,7 @@ interface FavoritesProviderProps {
 }
 
 export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
-  const [favoritesArr, setFavoritesArr] = useState<favoritesObj[]>([]);
+  const [favoritesArr, setFavoritesArr] = useState<FavoritesObj[]>([]);
 
   const value: FavoritesContextType = { favoritesArr, setFavoritesArr };
 
