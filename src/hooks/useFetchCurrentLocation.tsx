@@ -17,7 +17,7 @@ const useCurrentLocation = (setSearchString: (city: string) => void) => {
         navigator.geolocation.getCurrentPosition(async (item) => {
           if (item.coords.latitude === 0 || item.coords.longitude === 0) return;
           const res = await axios(
-            `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${
+            `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${
               import.meta.env.VITE_API_KEY
             }&q=${item.coords.latitude}%2C%20%20${item.coords.longitude}`
           );

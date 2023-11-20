@@ -17,7 +17,7 @@ const useFetchAutoComplete = (searchString: string) => {
     const fetchData = async () => {
       try {
         const res = await axios(
-          `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${
+          `https://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${
             import.meta.env.VITE_API_KEY
           }&q=${searchString}`
         );

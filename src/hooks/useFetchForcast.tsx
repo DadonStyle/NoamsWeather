@@ -21,7 +21,7 @@ const useFetchForcast = (cityKey: string, isCelsius: boolean) => {
       try {
         setIsLoading(true);
         const res = await axios(
-          `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${cityKey}?apikey=${
+          `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${cityKey}?apikey=${
             import.meta.env.VITE_API_KEY
           }&metric=${isCelsius}`
         );

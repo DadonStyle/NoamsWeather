@@ -28,7 +28,7 @@ const useFetchDailyWeather = (cityKey: string) => {
           return;
         }
         const res = await axios(
-          `http://dataservice.accuweather.com/currentconditions/v1/${cityKey}?apikey=${
+          `https://dataservice.accuweather.com/currentconditions/v1/${cityKey}?apikey=${
             import.meta.env.VITE_API_KEY
           }`
         );
