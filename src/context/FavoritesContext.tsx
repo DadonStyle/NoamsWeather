@@ -5,10 +5,9 @@ import {
   createContext,
   useState,
 } from "react";
+import { CityContextObj } from "./CurrentCityContext";
 
-export interface FavoritesObj {
-  cityName: string;
-  cityKey: string;
+export interface FavoritesObj extends CityContextObj {
   temp: number;
   unit: "C" | "F";
   weatherDesc: string;

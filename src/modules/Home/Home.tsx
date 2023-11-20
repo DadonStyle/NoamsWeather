@@ -3,6 +3,7 @@ import React, {
   useContext,
   useDeferredValue,
   useCallback,
+  useEffect,
 } from "react";
 import SearchComponent from "../../shared/Search/SearchComponent";
 import WeatherDisplay from "../WeatherDisplay/WeatherDisplay";
@@ -11,31 +12,54 @@ import {
   CurrentCityContext,
 } from "../../context/CurrentCityContext";
 import useFetchAutoComplete from "./hooks/useFetchAutoComplete";
-import "./Home.css";
 import useCurrentLocation from "../../hooks/useCurrentLocation";
+import "./Home.css";
 
 const Home = () => {
-  const [searchString, setSearchString] = useState<string>("");
-  const deferredSearchString = useDeferredValue(searchString);
+  const { cityObj, setCityObj } = useContext(CurrentCityContext);
+  const [searchString, setSearchString] = useState<string>(
+    cityObj?.LocalizedName || ""
+  );
   const [options, setOptions] = useState<CityContextObj[]>([]);
-  const { setCityObj } = useContext(CurrentCityContext);
+  const deferredSearchString = useDeferredValue(searchString);
 
-  useCurrentLocation(setSearchString);
+  const findCityInOptions = useCallback(
+    (cityName: string) =>
+      options.find((item) => item.LocalizedName === cityName),
+    [options]
+  );
+
+  const { cityName } = useCurrentLocation();
+
   useFetchAutoComplete(deferredSearchString, setOptions);
+
+  useEffect(() => {
+    if (cityName && !cityObj?.LocalizedName) {
+      setSearchString(cityName);
+      const newCityObj = findCityInOptions(cityName);
+      if (newCityObj) {
+        setCityObj(newCityObj);
+      }
+    }
+  }, [
+    cityName,
+    cityObj?.LocalizedName,
+    findCityInOptions,
+    options,
+    setCityObj,
+  ]);
+
+  const handleOnSelectInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newCityObj = findCityInOptions(e.target.value);
+      if (newCityObj) setCityObj(newCityObj);
+    },
+    [findCityInOptions, setCityObj]
+  );
 
   const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(e.currentTarget.value);
   };
-  const handleOnSelectInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const cityObj = options.find(
-        (item) => item.LocalizedName === e.target.value
-      );
-
-      setCityObj(cityObj || null);
-    },
-    [options, setCityObj]
-  );
 
   return (
     <div className="home-wrapper">

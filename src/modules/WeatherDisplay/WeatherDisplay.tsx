@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useMemo } from "react";
 import {
   Box,
   IconButton,
@@ -12,7 +12,7 @@ import { CurrentCityContext } from "../../context/CurrentCityContext";
 import { FavoritesContext, FavoritesObj } from "../../context/FavoritesContext";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { getDayFromDate } from "../../util/helpers";
-import useFetchWeatherData from "./hooks/useWeatherData";
+import useWeatherData from "../../hooks/useWeatherData";
 import "./WeatherDisplay.css";
 
 const WeatherDisplay = () => {
@@ -20,11 +20,16 @@ const WeatherDisplay = () => {
   const { isDarkMode } = useContext(DarkModeContext);
   const { cityObj } = useContext(CurrentCityContext);
   const { favoritesArr, setFavoritesArr } = useContext(FavoritesContext);
-  const isCityFavorite = favoritesArr.find(
-    (item) => item.cityKey === cityObj?.Key
+
+  const isCityFavorite = useMemo(
+    () => favoritesArr.find((item) => item.Key === cityObj?.Key),
+    [cityObj?.Key, favoritesArr]
   );
 
-  const { weatherObj, forcastArr } = useFetchWeatherData(isCelsius);
+  const { weatherObj, forcastArr } = useWeatherData(
+    cityObj?.Key || "",
+    isCelsius
+  );
 
   const handleToggleC = () => setIsCelsius(true);
   const handleToggleF = () => setIsCelsius(false);
@@ -53,9 +58,10 @@ const WeatherDisplay = () => {
       toast.error("Please choose a city first");
       return;
     }
-    const newItem = {
-      cityName: cityObj.LocalizedName,
-      cityKey: cityObj.Key,
+    const newItem: FavoritesObj = {
+      LocalizedName: cityObj.LocalizedName,
+      Country: cityObj.Country,
+      Key: cityObj.Key,
       temp: isCelsius
         ? weatherObj.Temperature.Metric.Value
         : weatherObj.Temperature.Imperial.Value,
@@ -63,7 +69,7 @@ const WeatherDisplay = () => {
         ? weatherObj?.Temperature.Metric.Unit
         : weatherObj?.Temperature.Imperial.Unit,
       weatherDesc: weatherObj.WeatherText,
-    } as FavoritesObj;
+    };
     if (isCityFavorite) {
       toast.error("Already marked as favorite");
       return;
@@ -72,7 +78,7 @@ const WeatherDisplay = () => {
     toast.success("Added successfully");
   };
 
-  if (!cityObj?.LocalizedName)
+  if (!cityObj?.Key)
     return <Box className="empty-wrapper">Please choose a city to view</Box>;
 
   return (
@@ -82,7 +88,7 @@ const WeatherDisplay = () => {
       <div className="display-header-wrapper">
         <div className="header-city-info">
           <div className="header-text">
-            <span>{`${cityObj?.Country?.LocalizedName}, ${cityObj?.LocalizedName}`}</span>
+            <span className="location-text">{`${cityObj?.Country?.LocalizedName}, ${cityObj?.LocalizedName}`}</span>
             <div className="header-temp-wrapper">
               {showDegree()}
               {weatherObj?.Temperature && (

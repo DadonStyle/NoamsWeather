@@ -6,10 +6,10 @@ interface locationObj {
   lat: number;
   lon: number;
 }
-// any is not recommended as its losing typescript purpose, however in this case i want this hook to be reusable
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const useCurrentLocation = (setState: (item: any) => void) => {
+
+const useCurrentLocation = () => {
   const [location, setLocation] = useState<locationObj>({ lat: 0, lon: 0 });
+  const [cityName, setCityName] = useState<string>("");
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((item) => {
@@ -26,13 +26,15 @@ const useCurrentLocation = (setState: (item: any) => void) => {
             import.meta.env.VITE_API_KEY
           }&q=${location.lat}%2C%20%20${location.lon}`
         );
-        setState(res.data?.LocalizedName);
+        setCityName(res.data?.LocalizedName);
       } catch (err) {
         toast.error("Something went wrong");
       }
     };
     fetchData();
-  }, [location.lat, location.lon, setState]);
+  }, [location.lat, location.lon]);
+
+  return { cityName };
 };
 
 export default useCurrentLocation;

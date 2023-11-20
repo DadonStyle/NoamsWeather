@@ -9,33 +9,41 @@ import "./FavoritesBox.css";
 import { DarkModeContext } from "../../../context/DarkModeContext";
 import { useNavigate } from "react-router-dom";
 import {
-  CurrentCityContext,
   CityContextObj,
+  CurrentCityContext,
 } from "../../../context/CurrentCityContext";
 
+interface FavoritesBoxProps extends FavoritesObj {
+  refetchFunc: (key: string, isCel: boolean) => void;
+}
+
 const FavoritesBox = ({
-  cityName,
-  cityKey,
+  LocalizedName,
+  Key,
   temp,
+  Country,
   unit,
   weatherDesc,
-}: FavoritesObj) => {
+  refetchFunc,
+}: FavoritesBoxProps) => {
   const { favoritesArr, setFavoritesArr } = useContext(FavoritesContext);
-  const { isDarkMode } = useContext(DarkModeContext);
   const { setCityObj } = useContext(CurrentCityContext);
+  const { isDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
 
   const handleRemoveFromFavorites = () => {
-    setFavoritesArr(favoritesArr.filter((item) => item.cityKey !== cityKey));
+    setFavoritesArr(favoritesArr.filter((item) => item.Key !== Key));
     toast.success("removed successfully");
   };
 
   const handleOnBoxClick = () => {
-    setCityObj({
-      Key: cityKey,
-      LocalizedName: cityName,
-      Country: { LocalizedName: "israel" },
-    } as CityContextObj);
+    const cityObj: CityContextObj = {
+      Key,
+      LocalizedName,
+      Country,
+    };
+    setCityObj(cityObj);
+    refetchFunc(Key, unit === "C");
     navigate("/");
   };
 
@@ -48,7 +56,7 @@ const FavoritesBox = ({
         }-theme`}
       >
         <div className="favorites-box-header">
-          <span>{cityName}</span>
+          <span>{LocalizedName}</span>
           <span>
             {temp}° {unit}
           </span>
