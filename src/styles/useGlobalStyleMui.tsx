@@ -1,10 +1,9 @@
-import { useContext } from "react";
-
 import { createTheme } from "@mui/material/styles";
-import { DarkModeContext } from "../context/DarkModeContext";
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 const useGlobalMuiTheme = () => {
-  const { isDarkMode } = useContext(DarkModeContext);
+  const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
   const theme = createTheme({
     palette: {
       primary: {

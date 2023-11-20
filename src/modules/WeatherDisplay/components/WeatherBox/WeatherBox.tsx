@@ -1,6 +1,6 @@
-import { useContext } from "react";
 import { Box } from "@mui/material";
-import { DarkModeContext } from "../../../../context/DarkModeContext";
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 import "./WeatherBox.css";
 
 interface WeatherBoxProps {
@@ -11,7 +11,7 @@ interface WeatherBoxProps {
 }
 
 const WeatherBox = ({ day, minTemp, maxTemp, unit }: WeatherBoxProps) => {
-  const { isDarkMode } = useContext(DarkModeContext);
+  const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
   return (
     <Box
       className={`weather-box-wrapper ${isDarkMode ? "dark" : "light"}-theme`}

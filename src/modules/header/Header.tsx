@@ -1,15 +1,19 @@
-import { useContext } from "react";
 import { Button, IconButton } from "@mui/material";
 import { LightModeOutlined, DarkModeOutlined } from "@mui/icons-material";
-import { DarkModeContext } from "../../context/DarkModeContext";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../redux/store";
+import { toggleDarkMode } from "../../redux/darkMode/darkModeSlice";
 import "./Header.css";
 
 const Header = () => {
-  const { toggleDarkMode, isDarkMode } = useContext(DarkModeContext);
+  const disptach = useDispatch();
+  const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
   const navigate = useNavigate();
   const handleOnFavoriteClick = () => navigate("./favorites");
   const handleOnHomeClick = () => navigate("./");
+  const handleOnDarkMode = () => disptach(toggleDarkMode());
+
   return (
     <div className={`header-wrapper ${isDarkMode ? "dark-header" : ""}`}>
       <div onClick={handleOnHomeClick} className="header-logo">
@@ -22,7 +26,7 @@ const Header = () => {
         </div>
         <div>
           <IconButton
-            onClick={toggleDarkMode}
+            onClick={handleOnDarkMode}
             sx={{ ml: 1, outline: "none !important" }}
             color="inherit"
           >

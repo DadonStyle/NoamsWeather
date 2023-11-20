@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext } from "react";
 import { Autocomplete, TextField } from "@mui/material";
-import { CityContextObj } from "../../context/CurrentCityContext";
-import { DarkModeContext } from "../../context/DarkModeContext";
+import { autoCompleteDTO } from "../../hooks/useFetchAutoComplete";
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 import "./SearchComponent.css";
 
-// reusable component, this is why i use any instead of specific types
+// using any type to keep the component reusable
 interface SearchComponentProps {
   onChangeFunc: (item: any) => void;
   onSelectFunc: (item: any) => void;
@@ -19,7 +19,7 @@ const SearchComponent = ({
   options,
   searchString,
 }: SearchComponentProps) => {
-  const { isDarkMode } = useContext(DarkModeContext);
+  const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
 
   return (
     <div className="search-wrapper">
@@ -27,12 +27,13 @@ const SearchComponent = ({
         freeSolo
         className={`search-input box-shadow-${isDarkMode ? "dark" : "light"}`}
         disablePortal
-        options={options.map((item: CityContextObj) => item.LocalizedName)}
+        options={options.map((item: autoCompleteDTO) => item.LocalizedName)}
         sx={{ width: 300 }}
         value={searchString}
         onSelect={onSelectFunc}
         renderInput={(params) => (
           <TextField
+            key={params.id}
             lang="en"
             onChange={onChangeFunc as () => void}
             {...params}

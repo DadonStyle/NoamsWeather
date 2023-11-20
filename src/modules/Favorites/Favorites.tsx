@@ -1,14 +1,11 @@
-import { useContext } from "react";
-import { FavoritesContext } from "../../context/FavoritesContext";
+import { useSelector } from "react-redux";
 import FavoritesBox from "./components/FavoritesBox";
 import { Box } from "@mui/material";
-import useWeatherData from "../../hooks/useWeatherData";
+import { RootState } from "../../redux/store";
 import "./Favorites.css";
 
 const Favorites = () => {
-  const { favoritesArr } = useContext(FavoritesContext);
-
-  const { refetchFunc } = useWeatherData("", false);
+  const favoritesArr = useSelector((state: RootState) => state.favorites);
 
   if (favoritesArr.length < 1)
     return <Box className="empty-wrapper">No favorites found</Box>;
@@ -17,14 +14,10 @@ const Favorites = () => {
     <div className="favorites-wrapper">
       {favoritesArr.map((item) => (
         <FavoritesBox
-          key={item.Key}
-          LocalizedName={item.LocalizedName}
-          Country={item.Country}
-          Key={item.Key}
-          temp={item.temp}
-          unit={item.unit}
-          weatherDesc={item.weatherDesc}
-          refetchFunc={refetchFunc}
+          key={item.key}
+          cityKey={item.key}
+          city={item.city}
+          country={item.country}
         />
       ))}
     </div>

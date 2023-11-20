@@ -1,51 +1,69 @@
-import { useContext } from "react";
-import {
-  FavoritesContext,
-  FavoritesObj,
-} from "../../../context/FavoritesContext";
 import { toast } from "react-toastify";
 import { Box, Button } from "@mui/material";
-import "./FavoritesBox.css";
-import { DarkModeContext } from "../../../context/DarkModeContext";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  CityContextObj,
-  CurrentCityContext,
-} from "../../../context/CurrentCityContext";
+  ICityObj,
+  setCurrCity,
+} from "../../../redux/currentCity/currentCitySlice";
+import useFetchDailyWeather from "../../../hooks/useFetchDailyWeather";
+import { RootState } from "../../../redux/store";
+import { setFavoritesArr } from "../../../redux/favorites/favoritesSlice";
+import "./FavoritesBox.css";
+import CircularLoading from "../../../shared/loading/circular";
 
-interface FavoritesBoxProps extends FavoritesObj {
-  refetchFunc: (key: string, isCel: boolean) => void;
+interface FavoritesBoxProps {
+  cityKey: string;
+  city: string;
+  country: string;
 }
 
-const FavoritesBox = ({
-  LocalizedName,
-  Key,
-  temp,
-  Country,
-  unit,
-  weatherDesc,
-  refetchFunc,
-}: FavoritesBoxProps) => {
-  const { favoritesArr, setFavoritesArr } = useContext(FavoritesContext);
-  const { setCityObj } = useContext(CurrentCityContext);
-  const { isDarkMode } = useContext(DarkModeContext);
+const FavoritesBox = ({ cityKey, city, country }: FavoritesBoxProps) => {
+  const favoritesArr = useSelector((state: RootState) => state.favorites);
+  const isCelsius = useSelector((state: RootState) => state.isCelsius);
+  const dispatch = useDispatch();
+  const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
   const navigate = useNavigate();
 
+  const { weatherObj, isLoading } = useFetchDailyWeather(cityKey);
+
   const handleRemoveFromFavorites = () => {
-    setFavoritesArr(favoritesArr.filter((item) => item.Key !== Key));
+    dispatch(
+      setFavoritesArr(favoritesArr.filter((item) => item.key !== cityKey))
+    );
     toast.success("removed successfully");
   };
 
   const handleOnBoxClick = () => {
-    const cityObj: CityContextObj = {
-      Key,
-      LocalizedName,
-      Country,
+    const cityObj: ICityObj = {
+      key: cityKey,
+      city,
+      country,
     };
-    setCityObj(cityObj);
-    refetchFunc(Key, unit === "C");
+    dispatch(setCurrCity(cityObj));
     navigate("/");
   };
+
+  const showDegree = () => {
+    if (weatherObj !== null) {
+      return (
+        <span className="weather-unit-span">
+          {`${
+            isCelsius
+              ? weatherObj?.Temperature.Metric.Value
+              : weatherObj?.Temperature.Imperial.Value
+          }° ${
+            isCelsius
+              ? weatherObj?.Temperature.Metric.Unit
+              : weatherObj?.Temperature.Imperial.Unit
+          }`}
+        </span>
+      );
+    }
+    return <span />;
+  };
+
+  if (isLoading) return <CircularLoading />;
 
   return (
     <div className="favorites-unit-wrapper">
@@ -56,12 +74,12 @@ const FavoritesBox = ({
         }-theme`}
       >
         <div className="favorites-box-header">
-          <span>{LocalizedName}</span>
-          <span>
-            {temp}° {unit}
-          </span>
+          <span className="favorites-city-name">{city}</span>
+          <span>{showDegree()}</span>
         </div>
-        <span>{weatherDesc}</span>
+        <span className="favorites-weather-text">
+          {weatherObj?.WeatherText}
+        </span>
       </Box>
       <Button
         className="favorites-remove-button"

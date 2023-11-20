@@ -1,38 +1,48 @@
-import { useContext, useState, useMemo } from "react";
+import { useMemo } from "react";
 import {
   Box,
   IconButton,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { useSelector, useDispatch } from "react-redux";
 import WeatherBox from "./components/WeatherBox/WeatherBox";
 import { toast } from "react-toastify";
-import { DarkModeContext } from "../../context/DarkModeContext";
-import { CurrentCityContext } from "../../context/CurrentCityContext";
-import { FavoritesContext, FavoritesObj } from "../../context/FavoritesContext";
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { getDayFromDate } from "../../util/helpers";
-import useWeatherData from "../../hooks/useWeatherData";
+import { RootState } from "../../redux/store";
+import useFetchDailyWeather from "../../hooks/useFetchDailyWeather";
+import useFetchForcast from "../../hooks/useFetchForcast";
+import {
+  IFavoritesObj,
+  setFavoritesArr,
+} from "../../redux/favorites/favoritesSlice";
+import { setIsCelsius } from "../../redux/degreeUnit/degreeUnit";
 import "./WeatherDisplay.css";
+import CircularLoading from "../../shared/loading/circular";
 
 const WeatherDisplay = () => {
-  const [isCelsius, setIsCelsius] = useState<boolean>(true);
-  const { isDarkMode } = useContext(DarkModeContext);
-  const { cityObj } = useContext(CurrentCityContext);
-  const { favoritesArr, setFavoritesArr } = useContext(FavoritesContext);
+  const dispatch = useDispatch();
+  const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
+  const isCelsius = useSelector((state: RootState) => state.isCelsius);
+  const cityObj = useSelector((state: RootState) => state.currentCity);
+  const favoritesArr = useSelector((state: RootState) => state.favorites);
 
   const isCityFavorite = useMemo(
-    () => favoritesArr.find((item) => item.Key === cityObj?.Key),
-    [cityObj?.Key, favoritesArr]
+    () => favoritesArr.find((item) => item.key === cityObj?.key),
+    [cityObj, favoritesArr]
   );
 
-  const { weatherObj, forcastArr } = useWeatherData(
-    cityObj?.Key || "",
+  const { weatherObj, isLoading: weatherLoading } = useFetchDailyWeather(
+    cityObj?.key
+  );
+  const { forcastArr, isLoading: forcastLoading } = useFetchForcast(
+    cityObj?.key,
     isCelsius
   );
 
-  const handleToggleC = () => setIsCelsius(true);
-  const handleToggleF = () => setIsCelsius(false);
+  const handleToggleC = () => dispatch(setIsCelsius(true));
+  const handleToggleF = () => dispatch(setIsCelsius(false));
 
   const showDegree = () => {
     if (weatherObj !== null) {
@@ -54,32 +64,29 @@ const WeatherDisplay = () => {
   };
 
   const handleAddFavorites = () => {
-    if (!weatherObj || !cityObj) {
+    if (!cityObj) {
       toast.error("Please choose a city first");
       return;
     }
-    const newItem: FavoritesObj = {
-      LocalizedName: cityObj.LocalizedName,
-      Country: cityObj.Country,
-      Key: cityObj.Key,
-      temp: isCelsius
-        ? weatherObj.Temperature.Metric.Value
-        : weatherObj.Temperature.Imperial.Value,
-      unit: isCelsius
-        ? weatherObj?.Temperature.Metric.Unit
-        : weatherObj?.Temperature.Imperial.Unit,
-      weatherDesc: weatherObj.WeatherText,
+    const newItem: IFavoritesObj = {
+      country: cityObj.country,
+      city: cityObj.city,
+      key: cityObj.key,
     };
     if (isCityFavorite) {
       toast.error("Already marked as favorite");
       return;
     }
-    setFavoritesArr((prevFavoritesArr) => [...prevFavoritesArr, newItem]);
+    dispatch(setFavoritesArr([...favoritesArr, newItem]));
     toast.success("Added successfully");
   };
 
-  if (!cityObj?.Key)
+  if (weatherLoading || forcastLoading) return <CircularLoading />;
+
+  if (!cityObj?.key)
     return <Box className="empty-wrapper">Please choose a city to view</Box>;
+
+  if (!weatherObj) return <Box className="empty-wrapper">No data to view</Box>;
 
   return (
     <Box
@@ -88,7 +95,7 @@ const WeatherDisplay = () => {
       <div className="display-header-wrapper">
         <div className="header-city-info">
           <div className="header-text">
-            <span className="location-text">{`${cityObj?.Country?.LocalizedName}, ${cityObj?.LocalizedName}`}</span>
+            <span className="location-text">{`${cityObj?.country}, ${cityObj?.city}`}</span>
             <div className="header-temp-wrapper">
               {showDegree()}
               {weatherObj?.Temperature && (

@@ -1,16 +1,17 @@
-import { useEffect, useContext } from "react";
-import {
-  CityContextObj,
-  CurrentCityContext,
-} from "../../../context/CurrentCityContext";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const useFetchAutoComplete = (
-  searchString: string,
-  setOptions: (item: CityContextObj[]) => void
-) => {
-  const { setCityObj } = useContext(CurrentCityContext);
+export interface autoCompleteDTO {
+  Country: {
+    LocalizedName: string;
+  };
+  LocalizedName: string;
+  Key: string;
+}
+
+const useFetchAutoComplete = (searchString: string) => {
+  const [options, setOptions] = useState<autoCompleteDTO[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,15 +21,15 @@ const useFetchAutoComplete = (
             import.meta.env.VITE_API_KEY
           }&q=${searchString}`
         );
-        if (res?.data) {
-          setOptions(res.data);
-        }
+        setOptions(res.data);
       } catch (err) {
         toast.error("Something went wrong");
       }
     };
     if (searchString !== "") fetchData();
-  }, [searchString, setCityObj, setOptions]);
+  }, [searchString, setOptions]);
+
+  return { options };
 };
 
 export default useFetchAutoComplete;

@@ -20,6 +20,14 @@
     .favorites-box-header {
       display: flex;
       flex-direction: column;
+      .favorites-city-name {
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+    .favorites-weather-text {
+      font-size: 22px;
+      font-weight: 600;
     }
   }
   .favorites-remove-button {
@@ -35,12 +43,14 @@
 
 .dark-theme {
   border: 1px solid white;
+  box-shadow: 0px 0px 4px 0px rgba(255, 255, 255, 0.75);
   &:hover {
     background-color: #4e031a;
   }
 }
 .light-theme {
   border: 1px solid black;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
   &:hover {
     background-color: rgb(243, 232, 232);
   }

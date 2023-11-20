@@ -1,60 +1,45 @@
-import React, {
-  useState,
-  useContext,
-  useDeferredValue,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { useState, useDeferredValue, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDisptach } from "../../redux/store";
 import SearchComponent from "../../shared/Search/SearchComponent";
 import WeatherDisplay from "../WeatherDisplay/WeatherDisplay";
+import useFetchAutoComplete from "../../hooks/useFetchAutoComplete";
+import useCurrentLocation from "../../hooks/useFetchCurrentLocation";
+import { RootState } from "../../redux/store";
 import {
-  CityContextObj,
-  CurrentCityContext,
-} from "../../context/CurrentCityContext";
-import useFetchAutoComplete from "./hooks/useFetchAutoComplete";
-import useCurrentLocation from "../../hooks/useCurrentLocation";
+  setCurrCity,
+  ICityObj,
+} from "../../redux/currentCity/currentCitySlice";
 import "./Home.css";
 
 const Home = () => {
-  const { cityObj, setCityObj } = useContext(CurrentCityContext);
-  const [searchString, setSearchString] = useState<string>(
-    cityObj?.LocalizedName || ""
-  );
-  const [options, setOptions] = useState<CityContextObj[]>([]);
+  const dispatch = useDispatch<AppDisptach>();
+  const cityObj = useSelector((state: RootState) => state.currentCity);
+  const [searchString, setSearchString] = useState<string>(cityObj?.city || "");
   const deferredSearchString = useDeferredValue(searchString);
+  const { options } = useFetchAutoComplete(deferredSearchString);
 
   const findCityInOptions = useCallback(
-    (cityName: string) =>
-      options.find((item) => item.LocalizedName === cityName),
+    (cityName: string) => {
+      const match = options.find((item) => item.LocalizedName === cityName);
+      const newCityObj: ICityObj = {
+        country: match?.Country.LocalizedName || "",
+        city: match?.LocalizedName || "",
+        key: match?.Key || "",
+      };
+      return newCityObj;
+    },
     [options]
   );
 
-  const { cityName } = useCurrentLocation();
-
-  useFetchAutoComplete(deferredSearchString, setOptions);
-
-  useEffect(() => {
-    if (cityName && !cityObj?.LocalizedName) {
-      setSearchString(cityName);
-      const newCityObj = findCityInOptions(cityName);
-      if (newCityObj) {
-        setCityObj(newCityObj);
-      }
-    }
-  }, [
-    cityName,
-    cityObj?.LocalizedName,
-    findCityInOptions,
-    options,
-    setCityObj,
-  ]);
+  useCurrentLocation(setSearchString);
 
   const handleOnSelectInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newCityObj = findCityInOptions(e.target.value);
-      if (newCityObj) setCityObj(newCityObj);
+      if (newCityObj.key.length > 0) dispatch(setCurrCity(newCityObj));
     },
-    [findCityInOptions, setCityObj]
+    [dispatch, findCityInOptions]
   );
 
   const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
