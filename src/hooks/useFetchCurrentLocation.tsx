@@ -32,7 +32,7 @@ const useCurrentLocation = (setSearchString: (city: string) => void) => {
           setSearchString(data.LocalizedName);
         });
       } catch (err) {
-        toast.error("Something went wrong");
+        toast.error("Location api limit reached");
       }
     };
     if (cityKey.length > 0) return;

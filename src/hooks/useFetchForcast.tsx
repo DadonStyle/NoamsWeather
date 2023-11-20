@@ -30,7 +30,7 @@ const useFetchForcast = (cityKey: string, isCelsius: boolean) => {
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        toast.error("Something went wrong");
+        toast.error("Forcast limit reached");
       }
     };
     if (cityKey.length < 1) return;

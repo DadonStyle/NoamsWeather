@@ -33,7 +33,7 @@ const useFetchDailyWeather = (cityKey: string) => {
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        toast.error("Something went wrong");
+        toast.error("Daily weather limit reached");
       }
     };
     fetchDailyData();

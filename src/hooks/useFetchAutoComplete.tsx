@@ -23,7 +23,7 @@ const useFetchAutoComplete = (searchString: string) => {
         );
         setOptions(res.data);
       } catch (err) {
-        toast.error("Something went wrong");
+        toast.error("AutoComplete limit reached");
       }
     };
     if (searchString !== "") fetchData();
