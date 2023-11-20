@@ -9,8 +9,8 @@ const favoritesSlice = createSlice({
   name: "favorites",
   initialState,
   reducers: {
-    setFavoritesArr: (state, action: PayloadAction<IFavoritesObj[]>) => {
-      return (state = action.payload);
+    setFavoritesArr: (_state, action: PayloadAction<IFavoritesObj[]>) => {
+      return (_state = action.payload);
     },
   },
 });

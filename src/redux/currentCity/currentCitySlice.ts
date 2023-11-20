@@ -16,8 +16,8 @@ const currentCitySlice = createSlice({
   name: "currentCity",
   initialState,
   reducers: {
-    setCurrCity: (state, action: PayloadAction<ICityObj>) => {
-      return (state = action.payload);
+    setCurrCity: (_state, action: PayloadAction<ICityObj>) => {
+      return (_state = action.payload);
     },
   },
 });

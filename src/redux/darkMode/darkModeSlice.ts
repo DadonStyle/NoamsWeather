@@ -6,8 +6,8 @@ const darkModeSlice = createSlice({
   name: "isDarkMode",
   initialState,
   reducers: {
-    toggleDarkMode: (state) => {
-      return (state = !state);
+    toggleDarkMode: (_state) => {
+      return (_state = !_state);
     },
   },
 });

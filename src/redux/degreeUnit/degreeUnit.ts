@@ -6,8 +6,8 @@ const degreeUnit = createSlice({
   name: "isCelsius",
   initialState,
   reducers: {
-    setIsCelsius: (state, action: PayloadAction<boolean>) => {
-      return (state = action.payload);
+    setIsCelsius: (_state, action: PayloadAction<boolean>) => {
+      return (_state = action.payload);
     },
   },
 });
