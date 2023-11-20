@@ -23,7 +23,10 @@ const useFetchDailyWeather = (cityKey: string) => {
     const fetchDailyData = async () => {
       try {
         setIsLoading(true);
-        if (cityKey.length < 1) return;
+        if (cityKey.length < 1) {
+          setIsLoading(false);
+          return;
+        }
         const res = await axios(
           `http://dataservice.accuweather.com/currentconditions/v1/${cityKey}?apikey=${
             import.meta.env.VITE_API_KEY
