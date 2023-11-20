@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import AppRouters from "./routes";
-import Header from "./modules/Header/Header.tsx";
+import AppHeader from "./modules/AppHeader/AppHeader.tsx";
 import useGlobalMuiTheme from "./styles/useGlobalStyleMui.tsx";
 import { RootState } from "./redux/store.ts";
 import { useSelector } from "react-redux";
@@ -19,7 +19,7 @@ const App = () => {
         <div
           className={`app-container ${isDarkMode ? "dark-mode" : "light-mode"}`}
         >
-          <Header />
+          <AppHeader />
           <AppRouters />
         </div>
       </BrowserRouter>

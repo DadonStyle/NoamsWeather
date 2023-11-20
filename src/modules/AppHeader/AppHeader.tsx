@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { toggleDarkMode } from "../../redux/darkMode/darkModeSlice";
-import "./Header.css";
+import "./AppHeader.css";
 
-const Header = () => {
+const AppHeader = () => {
   const disptach = useDispatch();
   const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
   const navigate = useNavigate();
@@ -38,4 +38,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default AppHeader;
