@@ -1,6 +1,6 @@
 import { CircularProgress } from "@mui/material";
 
-export default function CircularLoading() {
+const CircularLoading = () => {
   return (
     <CircularProgress
       sx={{
@@ -13,4 +13,6 @@ export default function CircularLoading() {
       }}
     />
   );
-}
+};
+
+export default CircularLoading;

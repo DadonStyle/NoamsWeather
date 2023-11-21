@@ -21,6 +21,13 @@ const SearchComponent = ({
 }: SearchComponentProps) => {
   const isDarkMode = useSelector((state: RootState) => state.isDarkMode);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const regex = /^[A-Za-z]+$/; // for english letters only
+    if (!regex.test(e.key)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className="search-wrapper">
       <Autocomplete
@@ -35,6 +42,7 @@ const SearchComponent = ({
           <TextField
             key={params.id}
             lang="en"
+            onKeyDown={handleKeyDown}
             onChange={onChangeFunc as () => void}
             {...params}
             label="City"
